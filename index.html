@@ -3,207 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dz News Pro</title>
+<title>Reels Rewards</title>
 
 <style>
 body{
-    font-family: Arial;
     margin:0;
-    background:#f4f4f4;
-    direction:rtl;
-}
-
-header{
-    background:#d32f2f;
+    background:#1e1e2f;
+    font-family:Arial;
+    overflow:hidden;
     color:white;
-    padding:15px;
-    text-align:center;
 }
 
 .container{
-    padding:20px;
-}
-
-.news{
-    background:white;
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:10px;
     position:relative;
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type:y mandatory;
 }
 
-.news img{
-    max-width:100%;
-    border-radius:10px;
-    margin-top:10px;
+.video-box{
+    position:relative;
+    height:100vh;
+    scroll-snap-align:start;
 }
 
-.menu-btn{
+video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* معلومات فوق الفيديو */
+.overlay{
     position:absolute;
-    left:10px;
-    top:10px;
+    bottom:80px;
+    left:15px;
+}
+
+.overlay h3{
+    margin:0;
+}
+
+.overlay p{
+    font-size:14px;
+    opacity:0.8;
+}
+
+/* أزرار جانبية */
+.side-buttons{
+    position:absolute;
+    right:10px;
+    bottom:100px;
+    text-align:center;
+}
+
+.side-buttons div{
+    margin:15px 0;
     cursor:pointer;
-    font-size:20px;
 }
 
-.dropdown{
-    display:none;
-    position:absolute;
-    left:10px;
-    top:35px;
-    background:white;
-    border:1px solid #ddd;
-    border-radius:5px;
+/* النقاط */
+.points{
+    position:fixed;
+    top:10px;
+    right:10px;
+    background:#ff0050;
+    padding:8px 15px;
+    border-radius:20px;
+    font-weight:bold;
     z-index:10;
 }
 
-.dropdown button{
-    display:block;
-    border:none;
-    background:none;
-    padding:8px;
-    cursor:pointer;
-    width:100%;
-}
-
-#addBtn{
+/* شريط سفلي */
+.bottom-nav{
     position:fixed;
-    bottom:20px;
-    left:20px;
-    background:#d32f2f;
-    color:white;
-    border:none;
-    padding:15px;
-    border-radius:50%;
-    font-size:20px;
-    cursor:pointer;
-}
-
-.modal{
-    display:none;
-    position:fixed;
-    top:0;
+    bottom:0;
     left:0;
     width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
-    justify-content:center;
-    align-items:center;
+    background:black;
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    border-top:1px solid #333;
 }
 
-.modal-content{
-    background:white;
-    padding:20px;
-    width:90%;
-    max-width:400px;
-    border-radius:10px;
-}
-
-.modal input, .modal textarea{
-    width:100%;
-    margin-bottom:10px;
-    padding:8px;
+.bottom-nav div{
+    text-align:center;
+    font-size:12px;
+    cursor:pointer;
 }
 </style>
-
-<script src="https://pl28836866.effectivegatecpm.com/e4/b5/fb/e4b5fb9a0205eb54c0151e947f3a40eb.js"></script>
-
 </head>
 <body>
 
+<div class="points">⭐ <span id="points">0</span></div>
 
+<div class="container">
 
-<header>
-<h1>📰 Dz News Pro</h1>
-</header>
+<div class="video-box">
+<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay muted loop></video>
 
-<div class="container" id="newsContainer"></div>
-
-<button id="addBtn">+</button>
-
-<div class="modal" id="modal">
-<div class="modal-content">
-<h3>نشر خبر جديد</h3>
-<input type="text" id="title" placeholder="عنوان الخبر">
-<textarea id="content" placeholder="محتوى الخبر"></textarea>
-<input type="file" id="image">
-<button onclick="addNews()">نشر</button>
-<button onclick="closeModal()">إلغاء</button>
+<div class="overlay">
+<h3>@company_name</h3>
+<p>شاهد الفيديو كامل لتحصل على 5 نقاط</p>
 </div>
+
+<div class="side-buttons">
+<div onclick="like()">❤️<br><span id="likes">0</span></div>
+<div onclick="claim()">💰</div>
+</div>
+
+</div>
+
+<div class="video-box">
+<video src="https://www.w3schools.com/html/movie.mp4" autoplay muted loop></video>
+
+<div class="overlay">
+<h3>@ads_video</h3>
+<p>شاهد الفيديو لتحصل على نقاط</p>
+</div>
+
+<div class="side-buttons">
+<div onclick="like()">❤️<br><span id="likes2">0</span></div>
+<div onclick="claim()">💰</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="bottom-nav">
+<div>🏠<br>Home</div>
+<div onclick="convert()">💱<br>Exchange</div>
+<div>🔍<br>Search</div>
+<div>👤<br>Profile</div>
 </div>
 
 <script>
-const modal = document.getElementById("modal");
-const container = document.getElementById("newsContainer");
-let controlOpen = false;
+let points = localStorage.getItem("points") || 0;
+points = parseInt(points);
+document.getElementById("points").innerText = points;
 
-document.getElementById("addBtn").onclick = () => {
-    modal.style.display = "flex";
+function claim(){
+    points += 5;
+    localStorage.setItem("points",points);
+    document.getElementById("points").innerText = points;
+    alert("تم إضافة 5 نقاط");
 }
 
-function closeModal(){
-    modal.style.display="none";
-}
-
-function addNews(){
-    const title = document.getElementById("title").value;
-    const content = document.getElementById("content").value;
-    const imageInput = document.getElementById("image");
-    const file = imageInput.files[0];
-
-    const newsDiv = document.createElement("div");
-    newsDiv.className="news";
-
-    let imgHTML = "";
-    if(file){
-        const reader = new FileReader();
-        reader.onload = function(e){
-            imgHTML = `<img src="${e.target.result}">`;
-            newsDiv.innerHTML = createNewsHTML(title, content, imgHTML);
-        }
-        reader.readAsDataURL(file);
-    }else{
-        newsDiv.innerHTML = createNewsHTML(title, content, imgHTML);
+function convert(){
+    if(points >= 1000){
+        points -= 1000;
+        localStorage.setItem("points",points);
+        document.getElementById("points").innerText = points;
+        alert("تم تحويل 1000 نقطة إلى 10$ (رصيد تجريبي)");
+    } else {
+        alert("تحتاج 1000 نقطة للتحويل");
     }
-
-    container.prepend(newsDiv);
-    closeModal();
 }
 
-function createNewsHTML(title, content, img){
-    return `
-        <span class="menu-btn" onclick="toggleMenu(this)">⋮</span>
-        <div class="dropdown">
-            <button onclick="deleteNews(this)">حذف</button>
-            <button onclick="closeControl(this)">إغلاق لوحة التحكم</button>
-        </div>
-        <h2>${title}</h2>
-        <p>${content}</p>
-        ${img}
-    `;
-}
-
-function toggleMenu(btn){
-    if(!controlOpen){
-        let pass = prompt("أدخل كلمة السر:");
-        if(pass !== "1"){
-            alert("كلمة السر خاطئة ❌");
-            return;
-        }
-        controlOpen = true;
-    }
-    const dropdown = btn.nextElementSibling;
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-}
-
-function deleteNews(btn){
-    btn.closest(".news").remove();
-}
-
-function closeControl(btn){
-    controlOpen = false;
-    document.querySelectorAll(".dropdown").forEach(d => d.style.display="none");
-    alert("تم إغلاق لوحة التحكم 🔒");
+let likeCount = 0;
+function like(){
+    likeCount++;
+    document.querySelectorAll("#likes,#likes2").forEach(el=>{
+        el.innerText = likeCount;
+    });
 }
 </script>
 
