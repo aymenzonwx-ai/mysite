@@ -3,273 +3,203 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚡ Ultimate Tremix Bot ⚡</title>
+<title>Dz News Pro</title>
 
 <style>
 body{
+    font-family: Arial;
     margin:0;
-    font-family:Arial;
-    background:linear-gradient(45deg,#000814,#001d3d,#000814);
-    background-size:400% 400%;
-    animation:bgMove 10s infinite alternate;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    background:#f4f4f4;
+    direction:rtl;
 }
 
-@keyframes bgMove{
-    0%{background-position:0% 50%}
-    100%{background-position:100% 50%}
-}
-
-.chat-container{
-    width:400px;
-    height:620px;
-    background:#001d3d;
-    border-radius:20px;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-    box-shadow:0 0 30px #00f5ff;
-    transition:0.3s;
-}
-
-.chat-header{
-    background:#00f5ff;
+header{
+    background:#d32f2f;
+    color:white;
     padding:15px;
     text-align:center;
-    font-weight:bold;
-    color:black;
 }
 
-.chat-messages{
-    flex:1;
+.container{
+    padding:20px;
+}
+
+.news{
+    background:white;
     padding:15px;
-    overflow-y:auto;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.message{
-    padding:10px 14px;
-    border-radius:15px;
-    max-width:75%;
-    font-size:14px;
-    animation:fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn{
-    from{opacity:0; transform:translateY(10px);}
-    to{opacity:1; transform:translateY(0);}
-}
-
-.user{
-    align-self:flex-end;
-    background:#00f5ff;
-    color:black;
-    box-shadow:0 0 10px #00f5ff;
-}
-
-.bot{
-    align-self:flex-start;
-    background:#003566;
-    color:white;
-    box-shadow:0 0 10px #00f5ff;
-}
-
-.red{
-    color:#ff0000;
-    font-weight:bold;
-    text-shadow:0 0 10px red;
-}
-
-.fire{
-    color:orange;
-    text-shadow:0 0 10px orange,0 0 20px red;
-}
-
-.typing{
-    font-style:italic;
-    opacity:0.7;
-}
-
-.chat-input{
-    display:flex;
-    padding:10px;
-    background:#000814;
-}
-
-.chat-input input{
-    flex:1;
-    padding:10px;
-    border:none;
-    border-radius:15px;
-    outline:none;
-}
-
-.chat-input button{
-    margin-left:5px;
-    padding:10px;
-    border:none;
-    border-radius:15px;
-    background:#00f5ff;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.control-buttons{
-    display:flex;
-    justify-content:space-between;
-    padding:5px;
-    background:#000814;
-}
-
-.control-buttons button{
-    flex:1;
-    margin:3px;
-    padding:5px;
-    border:none;
+    margin-bottom:15px;
     border-radius:10px;
+    position:relative;
+}
+
+.news img{
+    max-width:100%;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.menu-btn{
+    position:absolute;
+    left:10px;
+    top:10px;
     cursor:pointer;
+    font-size:20px;
+}
+
+.dropdown{
+    display:none;
+    position:absolute;
+    left:10px;
+    top:35px;
+    background:white;
+    border:1px solid #ddd;
+    border-radius:5px;
+    z-index:10;
+}
+
+.dropdown button{
+    display:block;
+    border:none;
+    background:none;
+    padding:8px;
+    cursor:pointer;
+    width:100%;
+}
+
+#addBtn{
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    background:#d32f2f;
+    color:white;
+    border:none;
+    padding:15px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:white;
+    padding:20px;
+    width:90%;
+    max-width:400px;
+    border-radius:10px;
+}
+
+.modal input, .modal textarea{
+    width:100%;
+    margin-bottom:10px;
+    padding:8px;
 }
 </style>
 </head>
-
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">⚡ Ultimate Tremix Bot ⚡</div>
+<header>
+<h1>📰 Dz News Pro</h1>
+</header>
 
-    <div class="chat-messages" id="messages"></div>
+<div class="container" id="newsContainer"></div>
 
-    <div class="chat-input">
-        <input type="text" id="userInput" placeholder="اكتب أمر...">
-        <button onclick="sendMessage()">إرسال</button>
-    </div>
+<button id="addBtn">+</button>
 
-    <div class="control-buttons">
-        <button onclick="clearChat()">🗑 مسح</button>
-        <button onclick="toggleTheme()">🌙 وضع</button>
-    </div>
+<div class="modal" id="modal">
+<div class="modal-content">
+<h3>نشر خبر جديد</h3>
+<input type="text" id="title" placeholder="عنوان الخبر">
+<textarea id="content" placeholder="محتوى الخبر"></textarea>
+<input type="file" id="image">
+<button onclick="addNews()">نشر</button>
+<button onclick="closeModal()">إلغاء</button>
+</div>
 </div>
 
-<audio id="sound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
-
 <script>
+const modal = document.getElementById("modal");
+const container = document.getElementById("newsContainer");
+let controlOpen = false;
 
-function sendMessage(){
-    const input = document.getElementById("userInput");
-    const text = input.value.trim();
-    if(text === "") return;
-
-    addMessage(text,"user");
-    input.value="";
-    playSound();
-
-    setTimeout(()=> handleBotReply(text),1000);
+document.getElementById("addBtn").onclick = () => {
+    modal.style.display = "flex";
 }
 
-function addMessage(text,type,extra=""){
-    const msg=document.createElement("div");
-    msg.className="message "+type+" "+extra;
-    msg.innerText=text;
-    document.getElementById("messages").appendChild(msg);
-    document.getElementById("messages").scrollTop=999999;
+function closeModal(){
+    modal.style.display="none";
 }
 
-function playSound(){
-    document.getElementById("sound").play();
-}
+function addNews(){
+    const title = document.getElementById("title").value;
+    const content = document.getElementById("content").value;
+    const imageInput = document.getElementById("image");
+    const file = imageInput.files[0];
 
-function fakeTyping(callback){
-    addMessage("⚡ جاري المعالجة...","bot","typing");
-    setTimeout(()=>{
-        const typing=document.querySelector(".typing");
-        if(typing) typing.remove();
-        callback();
-    },1200);
-}
+    const newsDiv = document.createElement("div");
+    newsDiv.className="news";
 
-function shake(){
-    const box=document.querySelector(".chat-container");
-    box.style.transform="translateX(6px)";
-    setTimeout(()=> box.style.transform="translateX(-6px)",100);
-    setTimeout(()=> box.style.transform="translateX(0)",200);
-}
-
-function glitch(text){
-    return text.split("").map(c=>c+String.fromCharCode(768)).join("");
-}
-
-function handleBotReply(msg){
-
-    fakeTyping(()=>{
-
-        if(msg==="/help"){
-            addMessage("⚡ قائمة الأوامر ⚡","bot");
-            addMessage("/df","bot");
-            addMessage("/cf","bot");
-            addMessage("/Bn","bot");
-            addMessage("/OP","bot");
-            addMessage("/a","bot");
+    let imgHTML = "";
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            imgHTML = `<img src="${e.target.result}">`;
+            newsDiv.innerHTML = createNewsHTML(title, content, imgHTML);
         }
-
-        else if(msg==="/df"){
-            addMessage("⚡ تم التنفيذ بنجاح","bot","fire");
-        }
-
-        else if(msg==="/cf"){
-            let i=0;
-            let spam=setInterval(()=>{
-                addMessage("1112121313158184","bot");
-                i++;
-                if(i>=5) clearInterval(spam);
-            },400);
-        }
-
-        else if(msg==="/Bn"){
-            shake();
-            addMessage(glitch("BLACK STORM"),"bot","red");
-        }
-
-        else if(msg==="/OP"){
-            addMessage("ايمن زعرور ✅🥳","bot");
-        }
-
-        else if(msg==="/a"){
-            addMessage("👤 معلومات الحساب","bot","fire");
-            setTimeout(()=> addMessage("الاسم: ايمن","bot"),400);
-            setTimeout(()=> addMessage("اللقب: زعرور","bot"),800);
-            setTimeout(()=> addMessage("البلد: الجزائر 🇩🇿","bot"),1200);
-            setTimeout(()=> addMessage("المدينة: جيجل","bot"),1600);
-            setTimeout(()=> addMessage("العمر: 16 سنة 🎂","bot"),2000);
-            setTimeout(()=> addMessage("مرحبا ايمن زعرور ✅🥳","bot"),2400);
-        }
-
-        else{
-            addMessage("اكتب /help","bot");
-        }
-
-    });
-}
-
-function clearChat(){
-    document.getElementById("messages").innerHTML="";
-}
-
-function toggleTheme(){
-    const box=document.querySelector(".chat-container");
-    if(box.style.background==="white"){
-        box.style.background="#001d3d";
-        box.style.color="white";
+        reader.readAsDataURL(file);
     }else{
-        box.style.background="white";
-        box.style.color="black";
+        newsDiv.innerHTML = createNewsHTML(title, content, imgHTML);
     }
+
+    container.prepend(newsDiv);
+    closeModal();
 }
 
+function createNewsHTML(title, content, img){
+    return `
+        <span class="menu-btn" onclick="toggleMenu(this)">⋮</span>
+        <div class="dropdown">
+            <button onclick="deleteNews(this)">حذف</button>
+            <button onclick="closeControl(this)">إغلاق لوحة التحكم</button>
+        </div>
+        <h2>${title}</h2>
+        <p>${content}</p>
+        ${img}
+    `;
+}
+
+function toggleMenu(btn){
+    if(!controlOpen){
+        let pass = prompt("أدخل كلمة السر:");
+        if(pass !== "1"){
+            alert("كلمة السر خاطئة ❌");
+            return;
+        }
+        controlOpen = true;
+    }
+    const dropdown = btn.nextElementSibling;
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function deleteNews(btn){
+    btn.closest(".news").remove();
+}
+
+function closeControl(btn){
+    controlOpen = false;
+    document.querySelectorAll(".dropdown").forEach(d => d.style.display="none");
+    alert("تم إغلاق لوحة التحكم 🔒");
+}
 </script>
 
 </body>
