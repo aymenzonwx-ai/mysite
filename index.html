@@ -3,173 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reels Rewards</title>
-
+<title>XDABO PRO</title>
 <style>
 body{
     margin:0;
-    background:#1e1e2f;
     font-family:Arial;
-    overflow:hidden;
+    background:#0b0f1a;
     color:white;
 }
-
-.container{
-    position:relative;
-    height:100vh;
-    overflow-y:scroll;
-    scroll-snap-type:y mandatory;
+.page{
+    display:none;
+    max-width:600px;
+    margin:40px auto;
+    padding:20px;
+    background:#0b0f1a;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,0.5);
+    min-height:400px;
 }
-
-.video-box{
-    position:relative;
-    height:100vh;
-    scroll-snap-align:start;
+.active{ display:block; }
+.header{ display:flex; align-items:center; justify-content:space-between; }
+.box{ margin-top:30px; }
+button{
+    width:100%; padding:15px; border:none; border-radius:10px;
+    font-size:18px; background:#ff4d4d; color:white; margin-top:10px;
 }
-
-video{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-/* معلومات فوق الفيديو */
-.overlay{
-    position:absolute;
-    bottom:80px;
-    left:15px;
-}
-
-.overlay h3{
-    margin:0;
-}
-
-.overlay p{
-    font-size:14px;
-    opacity:0.8;
-}
-
-/* أزرار جانبية */
-.side-buttons{
-    position:absolute;
-    right:10px;
-    bottom:100px;
-    text-align:center;
-}
-
-.side-buttons div{
-    margin:15px 0;
-    cursor:pointer;
-}
-
-/* النقاط */
-.points{
-    position:fixed;
-    top:10px;
-    right:10px;
-    background:#ff0050;
-    padding:8px 15px;
-    border-radius:20px;
-    font-weight:bold;
-    z-index:10;
-}
-
-/* شريط سفلي */
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background:black;
-    display:flex;
-    justify-content:space-around;
-    padding:10px 0;
-    border-top:1px solid #333;
-}
-
-.bottom-nav div{
-    text-align:center;
-    font-size:12px;
-    cursor:pointer;
-}
+.ad{ background:#1f2937; padding:20px; border-radius:10px; margin-top:15px; }
+.progress{ width:100%; height:20px; background:#333; border-radius:10px; overflow:hidden; margin-top:15px; }
+.bar{ width:0%; height:100%; background:#a855f7; }
+.marquee{ position:fixed; bottom:0; width:100%; white-space:nowrap; overflow:hidden; font-size:20px; font-weight:bold; background:transparent; z-index:1000; }
+.marquee span{ display:inline-block; padding-left:100%; animation:moveText 10s linear infinite; background:linear-gradient(to right, red, green); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+@keyframes moveText{0%{transform:translateX(100%);} 100%{transform:translateX(-100%);}}
+input{ padding:10px; margin-top:10px; width:100%; border-radius:5px; border:none; background:#1f2937; color:white; }
+label{ display:block; margin-top:10px; font-weight:bold; color:#10b981; }
 </style>
 </head>
 <body>
 
-<div class="points">⭐ <span id="points">0</span></div>
-
-<div class="container">
-
-<div class="video-box">
-<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay muted loop></video>
-
-<div class="overlay">
-<h3>@company_name</h3>
-<p>شاهد الفيديو كامل لتحصل على 5 نقاط</p>
+<div id="p1" class="page active">
+  <div class="header">
+    <h2>XDABO SYSTEM</h2>
+    <button onclick="showPasswordPrompt()">Ajouter un lien</button>
+  </div>
+  <div class="box">
+    <button onclick="show('p2')">📥 الحصول على الرابط</button>
+  </div>
 </div>
 
-<div class="side-buttons">
-<div onclick="like()">❤️<br><span id="likes">0</span></div>
-<div onclick="claim()">💰</div>
+<div id="p2" class="page">
+  <div class="header"><button onclick="show('p1')">⬅️ رجوع</button></div>
+  <div class="box">
+    <div class="ad">📢 إعلان هنا</div>
+    <button onclick="wait1()">➡️ متابعة</button>
+  </div>
 </div>
 
+<div id="p3" class="page">
+  <div class="header"><button onclick="show('p2')">⬅️ رجوع</button></div>
+  <h2>⏳ انتظار 1</h2>
+  <div class="ad">📢 إعلان</div>
+  <div class="progress"><div id="b1" class="bar"></div></div>
+  <p id="t1">0%</p>
+  <div class="box"><button id="nextBtn1" style="display:none;" onclick="wait2()">➡️ التالي</button></div>
 </div>
 
-<div class="video-box">
-<video src="https://www.w3schools.com/html/movie.mp4" autoplay muted loop></video>
-
-<div class="overlay">
-<h3>@ads_video</h3>
-<p>شاهد الفيديو لتحصل على نقاط</p>
+<div id="p4" class="page">
+  <div class="header"><button onclick="show('p3')">⬅️ رجوع</button></div>
+  <h2>⏳ انتظار 2</h2>
+  <div class="ad">📢 إعلان</div>
+  <div class="progress"><div id="b2" class="bar"></div></div>
+  <p id="t2">0%</p>
+  <div class="box"><button id="nextBtn2" style="display:none;" onclick="wait3()">➡️ التالي</button></div>
 </div>
 
-<div class="side-buttons">
-<div onclick="like()">❤️<br><span id="likes2">0</span></div>
-<div onclick="claim()">💰</div>
+<div id="p5" class="page">
+  <div class="header"><button onclick="show('p4')">⬅️ رجوع</button></div>
+  <h2>⏳ انتظار 3</h2>
+  <div class="ad">📢 إعلان</div>
+  <div class="progress"><div id="b3" class="bar"></div></div>
+  <p id="t3">0%</p>
+  <div class="box"><button id="nextBtn3" style="display:none;" onclick="show('p6')">➡️ التالي</button></div>
 </div>
 
+<div id="p6" class="page">
+  <div class="header"><button onclick="show('p1')">⬅️ رجوع</button></div>
+  <h2>📦 تحميل</h2>
+  <button onclick="openLink()">🚀 تحميل</button>
 </div>
 
+<!-- لوحة التحكم -->
+<div id="admin" class="page">
+  <div class="header">
+    <h2>⚙️ لوحة التحكم</h2>
+    <button onclick="show('p1')">⬅️ رجوع</button>
+  </div>
+  <label>الرابط الحالي:</label>
+  <p id="showLinkAdmin"></p>
+  <label>إضافة أو تعديل الرابط:</label>
+  <input id="linkInput" placeholder="رابط MediaFire">
+  <button onclick="saveLink()">💾 حفظ الرابط</button>
 </div>
 
-<div class="bottom-nav">
-<div>🏠<br>Home</div>
-<div onclick="convert()">💱<br>Exchange</div>
-<div>🔍<br>Search</div>
-<div>👤<br>Profile</div>
-</div>
+<div class="marquee"><span>مرحبا بكم في موقع أيمن زعرور 👻</span></div>
 
 <script>
-let points = localStorage.getItem("points") || 0;
-points = parseInt(points);
-document.getElementById("points").innerText = points;
+let link = localStorage.getItem("link") || "";
+document.getElementById("showLinkAdmin").innerText = link;
 
-function claim(){
-    points += 5;
-    localStorage.setItem("points",points);
-    document.getElementById("points").innerText = points;
-    alert("تم إضافة 5 نقاط");
+function show(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="admin"){
+    document.getElementById("linkInput").value = link;
+    document.getElementById("showLinkAdmin").innerText = link;
+  }
 }
 
-function convert(){
-    if(points >= 1000){
-        points -= 1000;
-        localStorage.setItem("points",points);
-        document.getElementById("points").innerText = points;
-        alert("تم تحويل 1000 نقطة إلى 10$ (رصيد تجريبي)");
-    } else {
-        alert("تحتاج 1000 نقطة للتحويل");
-    }
+function run(bar,text,btnId){
+  let duration=10,w=0,b=document.getElementById(bar),t=document.getElementById(text),btn=document.getElementById(btnId);
+  let interval=setInterval(()=>{
+    w++; let percent=Math.round((w/(duration*10))*100); if(percent>100)percent=100;
+    b.style.width=percent+"%"; t.innerText=percent+"%";
+    if(w>=duration*10){ clearInterval(interval); btn.style.display="block"; }
+  },100);
+}
+function wait1(){ show("p3"); run("b1","t1","nextBtn1"); }
+function wait2(){ show("p4"); run("b2","t2","nextBtn2"); }
+function wait3(){ show("p5"); run("b3","t3","nextBtn3"); }
+
+function openLink(){ if(!link){ alert("⚠️ ماكاش رابط"); return; } window.open(link,"_blank"); }
+
+function saveLink(){
+  link = document.getElementById("linkInput").value;
+  localStorage.setItem("link",link);
+  document.getElementById("showLinkAdmin").innerText = link;
+  alert("✅ تم حفظ الرابط!");
 }
 
-let likeCount = 0;
-function like(){
-    likeCount++;
-    document.querySelectorAll("#likes,#likes2").forEach(el=>{
-        el.innerText = likeCount;
-    });
+function showPasswordPrompt(){
+  let pwd = prompt("🔐 أدخل كلمة السر للوصول إلى لوحة التحكم:");
+  if(pwd==="1122"){ show("admin"); }
+  else if(pwd!==null){ alert("❌ كلمة السر خاطئة!"); }
 }
 </script>
-
 </body>
 </html>
